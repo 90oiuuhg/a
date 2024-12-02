@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Operations</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      width: 600px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Tiêu đề Input và Output */
+    .section-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 8px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      outline: none;
+      font-family: Arial, sans-serif;
+    }
+
+    input[type="text"]:focus {
+      border-color: #007bff;
+    }
+
+    .instruction {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 16px;
+    }
+
+    .button-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px 0;
+      background-color: #000;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      font-family: Arial, sans-serif;
+    }
+
+    button:hover {
+      background-color: #007bff;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    /* Phần output */
+    .output {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #007bff; /* Nền xanh đậm */
+      color: #fff;
+      font-size: 18px;  /* Kích thước chữ lớn hơn */
+      font-weight: bold;
+      border-radius: 8px; /* Góc bo tròn giống trong ảnh */
+      text-align: left; /* Căn trái */
+      font-family: Arial, sans-serif;
+    }
+
+    .output.empty {
+      background-color: #f9f9f9;
+      color: #333;
+      border: 1px solid #ccc;
+    }
+
+    .error {
+      margin-top: 10px;
+      color: red;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Phần Input -->
+    <div>
+      <p class="section-title">Input</p>
+      <input 
+        type="text" 
+        id="numberInput" 
+        placeholder="Please enter a sequence of numbers separated by commas"
+      >
+      <p class="instruction">
+        Please enter a sequence of whole numbers (positive, negative, or zero) separated by commas
+      </p>
+    </div>
+    
+    <!-- Các nút chức năng -->
+    <div class="button-container">
+      <button onclick="findMax()">Find Max</button>
+      <button onclick="findMin()">Find Min</button>
+      <button onclick="sortAZ()">Sort: A-Z</button>
+      <button onclick="sortZA()">Sort: Z-A</button>
+      <button onclick="increaseByOne()">Increase 1</button>
+      <button onclick="decreaseByOne()">Decrease 1</button>
+    </div>
+    
+    <!-- Phần Output -->
+    <div>
+      <p class="section-title">Output</p>
+      <div class="output empty" id="output">
+        Result: $Result
+      </div>
+    </div>
+
+    <!-- Thông báo lỗi -->
+    <div class="error" id="error"></div>
+  </div>
+
+  <script>
+    // Các hàm xử lý logic
+    function parseNumbers(input) {
+      const numbers = [];
+      let currentNumber = '';
+      for (let i = 0; i < input.length; i++) {
+        const char = input[i];
+        if (char === ',' || i === input.length - 1) {
+          if (char !== ',') currentNumber += char;
+          if (currentNumber.trim() === '' || !isValidNumber(currentNumber)) {
+            throw new Error("Invalid input detected. Please enter only whole numbers separated by commas.");
+          }
+          numbers.push(toNumber(currentNumber));
+          currentNumber = '';
+        } else {
+          currentNumber += char;
+        }
+      }
+      return numbers;
+    }
+
+    function isValidNumber(str) {
+      for (let i = 0; i < str.length; i++) {
+        const charCode = str.charCodeAt(i);
+        if (
+          !(charCode >= 48 && charCode <= 57) && // 0-9
+          !(i === 0 && (charCode === 45 || charCode === 43)) // - or + at the start
+        ) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function toNumber(str) {
+      let number = 0;
+      let isNegative = false;
+      let startIndex = 0;
+      if (str[0] === '-') {
+        isNegative = true;
+        startIndex = 1;
+      } else if (str[0] === '+') {
+        startIndex = 1;
+      }
+      for (let i = startIndex; i < str.length; i++) {
+        number = number * 10 + (str.charCodeAt(i) - 48);
+      }
+      return isNegative ? -number : number;
+    }
+
+    // Tìm Max
+    function findMax() {
+      try {
+        const input = document.getElementById("numberInput").value;
+        const numbers = parseNumbers(input);
+        let max = numbers[0];
+        for (let i = 1; i < numbers.length; i++) {
+          if (numbers[i] > max) {
+            max = numbers[i];
+          }
+        }
+        displayOutput(`Max: ${max}`);
+      } catch (error) {
+        displayError(error.message);
+      }
+    }
+
+    // Tìm Min
+    function findMin() {
+      try {
+        const input = document.getElementById("numberInput").value;
+        const numbers = parseNumbers(input);
+        let min = numbers[0];
+        for (let i = 1; i < numbers.length; i++) {
+          if (numbers[i] < min) {
+            min = numbers[i];
+          }
+        }
+        displayOutput(`Min: ${min}`);
+      } catch (error) {
+        displayError(error.message);
+      }
+    }
+
+    // Sắp xếp A-Z
+    function sortAZ() {
+      try {
+        const input = document.getElementById("numberInput").value;
+        const numbers = parseNumbers(input);
+        numbers.sort((a, b) => a - b);
+        displayOutput(`Sorted (A-Z): ${numbers.map(num => num < 0 ? `-${Math.abs(num)}` : num).join(", ")}`);
+      } catch (error) {
+        displayError(error.message);
+      }
+    }
+
+    // Sắp xếp Z-A
+    function sortZA() {
+      try {
+        const input = document.getElementById("numberInput").value;
+        const numbers = parseNumbers(input);
+        numbers.sort((a, b) => b - a);
+        displayOutput(`Sorted (Z-A): ${numbers.map(num => num < 0 ? `-${Math.abs(num)}` : num).join(", ")}`);
+      } catch (error) {
+        displayError(error.message);
+      }
+    }
+
+    // Tăng mỗi phần tử 1
+    function increaseByOne() {
+      try {
+        const input = document.getElementById("numberInput").value;
+        const numbers = parseNumbers(input);
+        for (let i = 0; i < numbers.length; i++) {
+          numbers[i] += 1;
+        }
+        displayOutput(`Increased by 1: ${numbers.join(", ")}`);
+      } catch (error) {
+        displayError(error.message);
+      }
+    }
+
+    // Giảm mỗi phần tử 1
+    function decreaseByOne() {
+      try {
+        const input = document.getElementById("numberInput").value;
+        const numbers = parseNumbers(input);
+        for (let i = 0; i < numbers.length; i++) {
+          numbers[i] -= 1;
+        }
+        displayOutput(`Decreased by 1: ${numbers.join(", ")}`);
+      } catch (error) {
+        displayError(error.message);
+      }
+    }
+
+    // Hiển thị kết quả
+    function displayOutput(result) {
+      const output = document.getElementById("output");
+      output.textContent = `Result: ${result}`;
+      output.classList.remove("empty");
+    }
+
+    // Hiển thị lỗi
+    function displayError(message) {
+      const errorElement = document.getElementById("error");
+      errorElement.textContent = message;
+    }
+  </script>
+</body>
+</html>
