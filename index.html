@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -86,12 +87,16 @@
     .output {
       margin-top: 20px;
       padding: 20px;
-      background-color: #007bff; /* Nền xanh đậm */
+      background-color: #007bff;
+      /* Nền xanh đậm */
       color: #fff;
-      font-size: 18px;  /* Kích thước chữ lớn hơn */
+      font-size: 18px;
+      /* Kích thước chữ lớn hơn */
       font-weight: bold;
-      border-radius: 8px; /* Góc bo tròn giống trong ảnh */
-      text-align: left; /* Căn trái */
+      border-radius: 8px;
+      /* Góc bo tròn giống trong ảnh */
+      text-align: left;
+      /* Căn trái */
       font-family: Arial, sans-serif;
     }
 
@@ -109,21 +114,18 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <!-- Phần Input -->
     <div>
       <p class="section-title">Input</p>
-      <input 
-        type="text" 
-        id="numberInput" 
-        placeholder="Please enter a sequence of numbers separated by commas"
-      >
+      <input type="text" id="numberInput" placeholder="Please enter a sequence of numbers separated by commas">
       <p class="instruction">
         Please enter a sequence of whole numbers (positive, negative, or zero) separated by commas
       </p>
     </div>
-    
+
     <!-- Các nút chức năng -->
     <div class="button-container">
       <button onclick="findMax()">Find Max</button>
@@ -133,7 +135,7 @@
       <button onclick="increaseByOne()">Increase 1</button>
       <button onclick="decreaseByOne()">Decrease 1</button>
     </div>
-    
+
     <!-- Phần Output -->
     <div>
       <p class="section-title">Output</p>
@@ -289,11 +291,13 @@
       output.classList.remove("empty");
     }
 
-    // Hiển thị lỗi
+    // Hiển thị error
+    // /////////////////////////
     function displayError(message) {
       const errorElement = document.getElementById("error");
       errorElement.textContent = message;
     }
   </script>
 </body>
+
 </html>
